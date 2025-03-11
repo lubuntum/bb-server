@@ -13,6 +13,8 @@ const authentificateToken = require("./middleware/authentificateToken")
 //routes reg
 const authRoutes = require('./routes/auth')
 app.use("/auth", authRoutes)
+const barrelComponents = require('./routes/barrelComponents')
+app.use("/barrel", barrelComponents)
 
 app.get("/test-protected", authentificateToken, (req, res) => {
     res.status(200).json({message: "Accessed"})
