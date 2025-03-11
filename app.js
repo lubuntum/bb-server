@@ -2,28 +2,20 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const {loginAccount, registerAccount} = require("./services/database_services/accountService")
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
 
-app.post('/register', async (req, res)=>{
-    try {
-        const result = await registerAccount(req.body)
-        res.status(result.status).json(result)
-    } catch(err) {
-        res.status(err.status).json(err)
-    }
-    
-})
-app.post('/login', (req, res) => {
-    const {email, pass} = req.body
-    loginAccount(email, pass).then(result => {
-        res.status(result.status).json(result)
-    }).catch(err=> {
-        res.status(err.status).json(err)
-    })
+//middlewares
+const authentificateToken = require("./middleware/authentificateToken")
+
+//routes reg
+const authRoutes = require('./routes/auth')
+app.use("/auth", authRoutes)
+
+app.get("/test-protected", authentificateToken, (req, res) => {
+    res.status(200).json({message: "Accessed"})
 })
 
 app.listen(process.env.PORT, process.env.HOSTNAME,  ()=> {

@@ -13,7 +13,6 @@ const registerAccount = async (acc) => {
         if (emailFromDb) throw { status: 400, message: "User already exists" }; 
 
         const hashedPassword = await hashPassword(acc.password)
-        console.log("second Completed", hashPassword)
         await new Promise((resolve, reject) => {
             db.run('INSERT INTO account (name, surname, patronymic, email, password, phone_number) VALUES (?, ?, ?, ?, ?, ?)',
                 [acc.name, acc.secondName, acc.patronymic, acc.email, hashedPassword, acc.phoneNumber], (err) => {
@@ -36,10 +35,9 @@ const loginAccount = async (email, pass) => {
             const isMatch = await comparePasswords(pass, account.password)
             if (!isMatch)
                 return reject({status: 400, message: 'Invalid credentials'})
-            const token = jwt.sign({id: account.id}, process.env.SECRET_KEY, {expiresIn: '1h'})
+            const token = "Bearer " + jwt.sign({id: account.id}, process.env.SECRET_KEY, {expiresIn: '1h'})
             resolve({status: 200, token: token})
         })
-        
     })
 }
 
