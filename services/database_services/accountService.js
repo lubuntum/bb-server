@@ -9,7 +9,6 @@ const registerAccount = async (acc) => {
                 resolve(row)
             })
         })
-        console.log("Fist step completed", emailFromDb)
         if (emailFromDb) throw { status: 400, message: "User already exists" }; 
 
         const hashedPassword = await hashPassword(acc.password)
@@ -20,7 +19,7 @@ const registerAccount = async (acc) => {
                     resolve()
                 })
         })
-        return {status: 200, message: "Registration Succeed"}
+        return {status: 201, message: "Registration Succeed"}
     } catch(err) {
         return err
     }
@@ -41,4 +40,13 @@ const loginAccount = async (email, pass) => {
     })
 }
 
-module.exports = {registerAccount ,loginAccount}
+const getAccountInfoById = async (accountId) => {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT name, surname, patronymic, email FROM account where id=?", [accountId], (err, accountInfo)=>{
+            if (err) return reject({status: 500, message: err})
+            resolve({status: 200, data: accountInfo})
+        })
+    })
+}
+
+module.exports = {registerAccount ,loginAccount, getAccountInfoById}
