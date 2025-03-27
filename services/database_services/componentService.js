@@ -2,40 +2,34 @@ const db = require("../../database/database")
 
 const getBarrelComponents = async () => {
     try {
-        const materials = await getMaterials()
-        const forms = await getForms()
-        const ovenTypes = await getOvenTypes()
-        return {status: 200, data: {materials: materials, forms: forms, ovenTypes: ovenTypes}}
+        const material = await getComponentsByName("material")
+        const form = await getComponentsByName("form")
+        const ovenType = await getComponentsByName("oven_type")
+        const color = await getComponentsByName("color")
+        const ovenAddition = await getComponentsByName("oven_addition")
+        const door = await getComponentsByName("door")
+        const tank = await getComponentsByName("tank")
+        const window = await getComponentsByName("window")
+        const base = await getComponentsByName("base")
+        const area = await getComponentsByName("area")
+        const tensionRing = await getComponentsByName("tension_ring")
+        const ovenPlacement = await getComponentsByName("oven_placement")
+        console.log(ovenPlacement)
+        return {status: 200, data: {material, form, ovenType, color, ovenAddition, door, tank, window, base, area, tensionRing, ovenPlacement}}
     } catch(err) {
         return err
     }
 }
 
-const getMaterials = () => {
+const getComponentsByName = (componentsName) => {
     return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM material", (err, row) => {
-            if (err) return reject({status: 500, message: `error occured while getting materials ${err}`})
+        console.log(`SELECT * FROM ${componentsName}`)
+        db.all(`SELECT * FROM ${componentsName}`, (err, row) => {
+            if (err) return reject({status: 500, message: `error occured white getting ${componentsName} - ${err}`})
             resolve(row)
         })
     })
 }
 
-const getForms = () => {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM form", (err, row) => {
-            if (err) return reject({status: 500, message: `error occured while getting forms ${err}`})
-            resolve(row)
-        })
-    })
-}
-
-const getOvenTypes = () => {
-    return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM oven_type", (err, row) => {
-            if (err) return reject({status: 500, message: `error occured while getting oven_types ${err}`})
-            resolve(row)
-        })
-    })
-}
 
 module.exports = getBarrelComponents
