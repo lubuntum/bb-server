@@ -13,7 +13,9 @@ const getBarrelComponents = async () => {
         const base = await getComponentsByName("base")
         const area = await getComponentsByName("area")
         const tensionRing = await getComponentsByName("tension_ring")
-        return {status: 200, data: {material, form, ovenType, color, ovenAddition, door, tank, window, base, area, tensionRing}}
+        const ovenPlacement = await getComponentsByName("oven_placement")
+        console.log(ovenPlacement)
+        return {status: 200, data: {material, form, ovenType, color, ovenAddition, door, tank, window, base, area, tensionRing, ovenPlacement}}
     } catch(err) {
         return err
     }
