@@ -12,7 +12,7 @@ router.post("/create-order", authentificateToken, async (req, res) => {
     
 })
 
-router.get("/order-by-account", authentificateToken, async (req, res) => {
+router.get("/orders-by-account", authentificateToken, async (req, res) => {
     try {
         const result = await getOrdersByAccountId(req.jwtData.id)
         res.status(200).json(result)
