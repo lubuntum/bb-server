@@ -1,11 +1,18 @@
 const db = require("../../database/database")
 
-const createOrder = async (order) => {
-    console.log(order.barrelSaunaId, new Date().toISOString())
+const createOrder = async (barrelSaunaId, accountId) => {
+    //console.log(order.barrelSaunaId, new Date().toISOString())
+    const statusId = await new Promise((resolve, reject) => {
+        const sql = "SELECT id FROM `status` WHERE status_name = ?"
+        db.get(sql, "Не оплачено", (err, row) => {
+            if (err) reject({status: 500, message: err})
+            resolve(row.id)
+        })
+    })
     try {
         return await new Promise((resolve, reject) => {
-            db.run("INSERT INTO `order` (barrel_sauna_id, account_id, price, created_at, count, status_id) VALUES (?, ?, ?, ?, ?, ?)", 
-                [order.barrelSaunaId, order.accountId, order.price, new Date().toISOString(), order.count, order.statusId], (err) => {
+            db.run("INSERT INTO `order` (barrel_sauna_id, account_id, created_at, count, status_id) VALUES (?, ?, ?, ?, ?)", 
+                [barrelSaunaId, accountId, new Date().toISOString(), 1, statusId], (err) => {
                     if (err) return reject({status: 500, message: err})
                     resolve({status: 201, message: "created"})
                 })
