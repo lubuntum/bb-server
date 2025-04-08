@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const authentificateToken = require("../middleware/authentificateToken")
-const {createOrder, getOrdersByAccountId} = require("../services/database_services/orderService")
+const {createOrder, getOrdersByAccountID, getOrdersByAccountIdWithBarrels} = require("../services/database_services/orderService")
 const {createBarrelSauna} = require("../services/database_services/barrelSaunaService")
 router.post("/create-order", authentificateToken, async (req, res) => {
     try {
@@ -16,7 +16,7 @@ router.post("/create-order", authentificateToken, async (req, res) => {
 
 router.get("/orders-by-account", authentificateToken, async (req, res) => {
     try {
-        const result = await getOrdersByAccountId(req.jwtData.id)
+        const result = await getOrdersByAccountIdWithBarrels(req.jwtData.id)
         res.status(200).json(result)
     } catch(err) {
         res.status(err.status || 500).json(err)

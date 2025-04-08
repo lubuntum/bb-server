@@ -34,5 +34,15 @@ const getOrdersByAccountId = async (accountId) => {
         return err
     }
 }
+const getOrdersByAccountIdWithBarrels = async (accountId) => {
+    const ordersWithBarrels = await new Promise((resolve, reject) => {
+        db.all("SELECT o.*, b.* FROM `order` o LEFT JOIN barrel_sauna b ON o.barrel_sauna_id = b.id where o.account_id=?",[accountId], (err, data) => {
+            if (err) return reject({status: 500, message: err})
+            resolve(data)
+        })
+    })
+    return ordersWithBarrels
 
-module.exports = {createOrder, getOrdersByAccountId}
+}
+
+module.exports = {createOrder, getOrdersByAccountId, getOrdersByAccountIdWithBarrels}

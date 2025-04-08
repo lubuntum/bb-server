@@ -1,7 +1,6 @@
 const db = require("../../database/database")
 
 const createBarrelSauna = async (barrel) => {
-    console.log(`barrel = ${barrel}`)
     return await new Promise((resolve, reject) => {
         const sql = "INSERT INTO barrel_sauna " +
             "(material_id, form_id, oven_type_id, color_id, oven_addition_id, " +
@@ -22,7 +21,6 @@ const createBarrelSauna = async (barrel) => {
                 barrel.tension_ring_id,
                 barrel.oven_placement_id
             ];
-        console.log(values)
         db.run(sql, values, function(err) {
                 if (err) return reject({status: 500, message: err})
                 console.log(this.lastID)
